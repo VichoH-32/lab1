@@ -35,43 +35,40 @@ public class Iterativo{
     }
     public void setMaxAreaI(){
         for(int i=0; i<mat.length -1; i++){
+            System.out.println(i);
             for(int j=0; j<mat[i].length - 2*i -1; j++){
+                System.out.println(j);
+                int x=i;
+                int y=j;
                 int areaAuxI=0;
                 int c=0;
                 int v=0;
                 boolean bob=true;
-                if(j%2==0){
-                    while(bob=true && v<= 2*c ){
-                        if(i==0){
-                            if(c==0){
-                                if(mat[0][j]=='-'){
-                                    areaAuxI=1;
-                                }else{
-                                    areaAuxI=0;
-                                }
+                if( j%2==0){
+                    while( (mat[x][y]=='-') && (bob=true) ){
+                        if(x!=0){
+                            if(v==(2*c)){
+                                areaAuxI = areaAuxI + (2*c) +1;
+                                y= y - (2*c);
+                                x--;
+                                c++;
+                                v=0;
                             }else{
-                                if(v== 2*c){
-                                    bob=false;
-                                    areaAuxI=areaAuxI + 2*c +1;
-                                }else{
-                                    j++;
-                                    v++;
-                                }
+                                y++;
+                                v++;
                             }
                         }else{
-                            if(mat[j][i]!='-'){
-                                bob=false;
-                            }else{
-                                if(v== 2*c){
-                                    i--;
-                                    j= j - 2*c ;
-                                    areaAuxI= areaAuxI + 2*c +1;
-                                    c++;
-                                    v=0;
+                            if(c!=0){
+                                if(v== (2*c) ){
+                                    areaAuxI= areaAuxI + (2*c) +1;
+                                    bob=false;
                                 }else{
-                                    j++;
+                                    y++;
                                     v++;
                                 }
+                            }else{
+                                areaAuxI=1;
+                                bob=false;
                             }
                         }
                     }
@@ -79,30 +76,30 @@ public class Iterativo{
                         this.areaI=areaAuxI;
                     }
                 }else{
-                    while(bob=true && v<= 2*c ){
-                        if( j- (2*c) ==1 || j== mat[i].length - 2*i -2 -v ){
-                            if(mat[i][j]!='-'){
-                                bob=false;
+                    while(mat[x][y]=='-' && bob==true){
+                        if(y!=1 && (y+v)!= mat[x].length -(2*c) -2){
+                            if(v==(2*c)){
+                                areaAuxI= areaAuxI + (2*c) +1;
+                                y=y + (2*c);
+                                x++;
+                                c++;
+                                v=0;
                             }else{
-                                if(v== 2*c){
-                                    bob=false;
-                                    areaAuxI=areaAuxI + 2*c +1;
-                                }else{
-                                    j--;
-                                    v++;
-                                }
+                                y--;
+                                v++;
                             }
                         }else{
-                            if(mat[i][j]!='-'){
-                                bob=false;
-                            }else{
-                                if(v== 2*c ){
-                                    i++;
-                                    j=j + 2*c ;
-                                    areaAuxI=areaAuxI + 2*c +1;
-                                    c++;
-                                    v=0;
+                            if(c!=0){
+                                if(v==(2*c)){
+                                    areaAuxI=areaAuxI + (2*c) +1;
+                                    bob=false;
+                                }else{
+                                    y--;
+                                    v++;
                                 }
+                            }else{
+                                areaAuxI=1;
+                                bob=false;
                             }
                         }
                     }
@@ -122,7 +119,7 @@ public class Iterativo{
         System.out.println("");//print de orden visual
         for(int i=0; i<mat.length; i++){
             for(int j=0; j<mat[i].length; j++){
-                System.out.print(mat[i][j]+" ");
+                System.out.print(mat[i][j]);
             }System.out.println("");
         }
         System.out.println("");//print de orden visual
