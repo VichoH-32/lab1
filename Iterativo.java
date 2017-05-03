@@ -4,124 +4,118 @@ public class Iterativo{
 
     Scanner sc=new Scanner(System.in);
 
-    private int areaI;
+    private int area;
     private char[][] mat;
+    private int contador;
+    private int pivote;
 
     public Iterativo(){
         mat=new char[1][1];
         mat[0][0]='-';
-        areaI=1;
+        area=1;
     }
 
     public Iterativo(int n){
         mat=new char[n][2*n - 1];
         for(int i=0; i<mat.length; i++){
-            if(i==0){
-                System.out.print("ingrese '#' o '-' para pintarlo o no y luego ENTER: ");
-            }else{
-                System.out.print("ingrese la siguiente fila: ");
-            }
-
+            System.out.print("ingrese una combinacion de '-'s y '#'s de largo "+(mat[i].length - 2*i )+" ---> ");
+            String letrasI=sc.nextLine();
             for(int j=0; j<mat[i].length - 2*i; j++){
-                char resp=sc.next().charAt(0);
-                if( resp=='#'){
-                    mat[i][j]='#';
-                }else{
-                    mat[i][j]='-';
-                }
+                mat[i][j]=letrasI.charAt(j);
             }
         }
-        areaI=0;
+        this.area=0;
+        this.contador=0;
+        this.pivote=0;
     }
-    public void setMaxAreaI(){
-        for(int i=0; i<mat.length -1; i++){
-            System.out.println(i);
-            for(int j=0; j<mat[i].length - 2*i -1; j++){
-                System.out.println(j);
-                int x=i;
-                int y=j;
-                int areaAuxI=0;
-                int c=0;
-                int v=0;
-                boolean bob=true;
-                if( j%2==0){
-                    while( (mat[x][y]=='-') && (bob=true) ){
-                        if(x!=0){
-                            if(v==(2*c)){
-                                areaAuxI = areaAuxI + (2*c) +1;
-                                y= y - (2*c);
-                                x--;
-                                c++;
-                                v=0;
-                            }else{
-                                y++;
-                                v++;
-                            }
-                        }else{
-                            if(c!=0){
-                                if(v== (2*c) ){
-                                    areaAuxI= areaAuxI + (2*c) +1;
-                                    bob=false;
-                                }else{
-                                    y++;
-                                    v++;
-                                }
-                            }else{
-                                areaAuxI=1;
-                                bob=false;
-                            }
-                        }
-                    }
-                    if(areaAuxI>this.areaI){
-                        this.areaI=areaAuxI;
-                    }
-                }else{
-                    while(mat[x][y]=='-' && bob==true){
-                        if(y!=1 && (y+v)!= mat[x].length -(2*c) -2){
-                            if(v==(2*c)){
-                                areaAuxI= areaAuxI + (2*c) +1;
-                                y=y + (2*c);
-                                x++;
-                                c++;
-                                v=0;
-                            }else{
-                                y--;
-                                v++;
-                            }
-                        }else{
-                            if(c!=0){
-                                if(v==(2*c)){
-                                    areaAuxI=areaAuxI + (2*c) +1;
-                                    bob=false;
-                                }else{
-                                    y--;
-                                    v++;
-                                }
-                            }else{
-                                areaAuxI=1;
-                                bob=false;
-                            }
-                        }
-                    }
-                    if(areaAuxI>this.areaI){
-                        this.areaI=areaAuxI;
-                    }
-                }
-            }
-        }
-    }
-
-    public int getAreaI(){
-        return this.areaI;
-    }
-
+    
     public void printMatI(){
         System.out.println("");//print de orden visual
         for(int i=0; i<mat.length; i++){
+            for(int k=0; k<i+1; k++){
+                System.out.print(" ");
+            }
             for(int j=0; j<mat[i].length; j++){
                 System.out.print(mat[i][j]);
             }System.out.println("");
         }
         System.out.println("");//print de orden visual
     }
+
+    public int getArea(){
+        par();
+        impar();
+        return this.area;
+    }
+
+    public void par(){
+        int areaAuxI=0;
+        for(int i=0; i<mat.length; i++){
+            this.contador=0;
+            for(int j=0; j<mat[i].length - 2*i ; j++){
+                if(mat[i][j]=='-' && j%2==0 ){
+                    this.pivote=j;
+                    int n=i;
+                    this.contador=0;
+                    while(parCheck(n)){
+                        areaAuxI+= 2*this.contador +1;
+                        n--;
+                        this.contador++;
+                    }
+                    if(areaAuxI>this.area){
+                        this.area=areaAuxI;
+                    }
+                    areaAuxI=0;
+                }
+            }
+        }
+    }
+
+    public void impar(){
+        int areaAuxI=0;
+        for(int i=0; i<mat.length; i++){
+            //this.contador=0;
+            for(int j=0; j<mat[i].length - 2*i ; j++){
+                if(mat[i][j]=='-' && j%2==1 ){
+                    this.pivote=j;
+                    int n=i;
+                    this.contador=0;
+                    while(imparCheck(n)){
+                        areaAuxI+= 2*this.contador +1;
+                        n++;
+                        this.contador++;
+                    }
+                    if(areaAuxI>this.area){
+                        this.area=areaAuxI;
+                    }
+                    areaAuxI=0;
+                }
+            }
+        }
+    }
+
+    public boolean parCheck(int n){
+        if(n>=0){
+            for(int v=0; v<= 2*this.contador; v++){
+                if(mat[n][this.pivote + v]!='-'){
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean imparCheck(int n){
+        if( (this.pivote<=mat[n].length - 2*n -2) && (this.pivote - 2*this.contador>=1) ){
+            for(int v=0; v<= 2*this.contador; v++){
+                if(mat[n][this.pivote - v]!='-'){
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
 }
